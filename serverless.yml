@@ -1,0 +1,59 @@
+service: dotnet-lambda-demo
+
+provider:
+  name: aws
+  runtime: dotnet6
+  architecture: arm64
+  stage: ${opt:stage, "prod"}
+  region: ${opt:region, "eu-north-1"}
+  memorySize: ${opt:memory, "1024"}
+  logRetentionInDays: 7
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+          Resource:
+            - "arn:aws:dynamodb:${aws:region}:${self:custom.awsAccountNumber}:table/${self:custom.tableName}"
+
+package:
+  #individually: true
+  artifact: bin/release/net6.0/deployment.zip
+
+custom:
+  awsAccountNumber: "123412341234"
+  tableName: "BookDemo"
+
+functions:
+  Add:
+    handler: DotnetLambdaDemo::DotnetLambdaDemo.AddHandler::Add
+    #package:
+    #  artifact: bin/Release/net6.0/add.zip
+    events:
+      - httpApi:
+          method: POST
+          path: /book
+  Get:
+    handler: DotnetLambdaDemo::DotnetLambdaDemo.GetHandler::Get
+    #package:
+    #  artifact: bin/Release/net6.0/get.zip
+    events:
+      - httpApi:
+          method: GET
+          path: /book
+
+resources:
+  Resources:
+    BookDemo:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: book
+            AttributeType: S
+        KeySchema:
+          - AttributeName: book
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

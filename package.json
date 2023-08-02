@@ -1,0 +1,24 @@
+{
+  "name": "dotnet-lambda-demo",
+  "version": "1.0.0",
+  "description": "Demo project for setting up serverless C# functions - .NET 6, ARM architecture - on AWS.",
+  "author": "Mikael Vesavuori",
+  "license": "MIT",
+  "keywords": [
+    "c#",
+    "dotnet",
+    "demo",
+    "serverless",
+    "lambda",
+    "aws"
+  ],
+  "scripts": {
+    "build": "bash scripts/build.sh",
+    "deploy": "bash scripts/deploy.sh",
+    "test": "bash scripts/test.sh",
+    "teardown": "bash scripts/teardown.sh"
+  },
+  "devDependencies": {
+    "serverless": "3"
+  }
+}

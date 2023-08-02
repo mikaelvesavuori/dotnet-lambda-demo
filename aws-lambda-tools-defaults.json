@@ -1,0 +1,7 @@
+{
+  "profile": "default",
+  "region": "eu-north-1",
+  "configuration": "Release",
+  "framework": "net6.0",
+  "template": "serverless.yml"
+}
